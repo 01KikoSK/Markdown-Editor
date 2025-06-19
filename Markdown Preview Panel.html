@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Preview Panel</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font for better aesthetics */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5; /* Light gray background */
+        }
+
+        /* Basic styling for markdown elements within the preview area */
+        #markdownOutput h1 { @apply text-3xl font-bold mt-6 mb-4 text-gray-800; }
+        #markdownOutput h2 { @apply text-2xl font-semibold mt-5 mb-3 text-gray-800; }
+        #markdownOutput h3 { @apply text-xl font-semibold mt-4 mb-2 text-gray-800; }
+        #markdownOutput p { @apply mb-3 leading-relaxed text-gray-700; }
+        #markdownOutput ul { @apply list-disc list-inside mb-3 pl-4; }
+        #markdownOutput ol { @apply list-decimal list-inside mb-3 pl-4; }
+        #markdownOutput li { @apply mb-1 text-gray-700; }
+        #markdownOutput a { @apply text-blue-600 hover:underline; }
+        #markdownOutput strong { @apply font-bold; }
+        #markdownOutput em { @apply italic; }
+        #markdownOutput blockquote { @apply border-l-4 border-gray-300 pl-4 py-2 my-4 bg-gray-50 text-gray-600 italic; }
+        #markdownOutput code { @apply bg-gray-200 text-red-700 px-1 py-0.5 rounded text-sm; }
+        #markdownOutput pre {
+            @apply bg-gray-800 text-white p-4 rounded-lg overflow-auto my-4 text-sm;
+        }
+        #markdownOutput pre code {
+            @apply bg-transparent p-0 text-white;
+        }
+        #markdownOutput table { @apply w-full table-auto border-collapse border border-gray-200 my-4; }
+        #markdownOutput th, #markdownOutput td { @apply border border-gray-200 px-4 py-2 text-left text-gray-800; }
+        #markdownOutput th { @apply bg-gray-100 font-semibold; }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4 bg-gray-100">
+    <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-5xl flex flex-col md:flex-row gap-8">
+        <!-- Markdown Input Section -->
+        <div class="flex-1 flex flex-col">
+            <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Markdown Editor</h1>
+            <p class="text-gray-600 mb-4 text-center">
+                Type or paste your Markdown text below to see the live preview.
+            </p>
+            <textarea
+                id="markdownInput"
+                class="w-full flex-grow p-4 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out text-gray-800 font-mono text-sm resize-y min-h-[200px]"
+                placeholder="## Welcome to the Markdown Panel!
+
+This is a **simple** _Markdown_ editor.
+
+You can write:
+* Lists
+* [Links](https://www.google.com)
+* `Inline code`
+
+```javascript
+// Code blocks are also supported!
+function hello() {
+  console.log('Hello, Markdown!');
+}
+hello();
+```
+
+> Blockquotes look great too!
+
+| Header 1 | Header 2 |
+|----------|----------|
+| Cell 1   | Cell 2   |
+| Cell 3   | Cell 4   |
+
+Enjoy!"
+            ></textarea>
+            <button
+                id="renderButton"
+                class="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg shadow-md hover:shadow-lg transition duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75"
+            >
+                Render Markdown
+            </button>
+        </div>
+
+        <!-- Markdown Output Section -->
+        <div class="flex-1 border-t-2 md:border-l-2 md:border-t-0 border-gray-200 pt-8 md:pl-8 md:pt-0">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Preview</h2>
+            <div
+                id="markdownOutput"
+                class="w-full h-full p-4 bg-gray-100 rounded-lg border border-gray-300 overflow-auto text-gray-800"
+            >
+                <!-- Rendered Markdown will appear here -->
+                <p class="text-gray-500 text-center">Your rendered Markdown will appear here.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Marked.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <script>
+        // Get references to DOM elements
+        const markdownInput = document.getElementById('markdownInput');
+        const renderButton = document.getElementById('renderButton');
+        const markdownOutput = document.getElementById('markdownOutput');
+
+        /**
+         * Converts Markdown text to HTML and displays it.
+         */
+        function renderMarkdown() {
+            const markdownText = markdownInput.value;
+            // Use marked.js to convert markdown to HTML
+            // Using marked.use() to configure options is recommended for newer versions,
+            // but for simplicity and broad compatibility with older CDN versions,
+            // we'll stick to direct parse for this example.
+            const htmlOutput = marked.parse(markdownText);
+            markdownOutput.innerHTML = htmlOutput;
+        }
+
+        // Add event listener to the button
+        renderButton.addEventListener('click', renderMarkdown);
+
+        // Initial render on page load for the default example markdown
+        window.onload = renderMarkdown;
+    </script>
+</body>
+</html>
